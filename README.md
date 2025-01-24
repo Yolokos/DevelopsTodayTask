@@ -21,7 +21,7 @@ This console application processes and analyzes trip data from a CSV file. The p
 # Deliverables
 
 1. In the folder Scripts you can create Trip table by your own.
-2. Total cound of rows: 29889
+2. Total count of rows: 29889
 3. Assume your program will be used on much larger data files. Describe in a few sentences what you would change if you knew it would be used for a 10GB CSV input file.
    - Use IAsyncEnumerable for "dynamic reading"
    - Use Non-cluster index for fast search, filter etc.
