@@ -1,4 +1,3 @@
--- Создание таблицы Trips
 CREATE TABLE Trips (
     Id INTEGER NOT NULL CONSTRAINT "PK_Trips" PRIMARY KEY AUTOINCREMENT,
     TpepPickupDatetime DATETIME NOT NULL,
