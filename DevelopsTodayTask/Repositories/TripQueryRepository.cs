@@ -43,10 +43,10 @@ namespace DevelopsTodayTask.Repositories
 		{
 			var longestDurationTrips = await _context.TripData
 				.FromSqlRaw(@"
-		            SELECT * 
-		            FROM Trips 
-		            ORDER BY (strftime('%s', TpepDropoffDatetime) - strftime('%s', TpepPickupDatetime)) DESC 
-		            LIMIT 100")
+		             SELECT * 
+			            FROM Trips 
+			            ORDER BY DATEDIFF(SECOND, TpepPickupDatetime, TpepDropoffDatetime) DESC
+			            OFFSET 0 ROWS FETCH NEXT 100 ROWS ONLY")
 				.ToListAsync();
 
 			return longestDurationTrips;

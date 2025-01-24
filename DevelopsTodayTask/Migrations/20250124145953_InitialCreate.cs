@@ -15,17 +15,17 @@ namespace DevelopsTodayTask.Migrations
                 name: "Trips",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    TpepPickupDatetime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TpepDropoffDatetime = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    PassengerCount = table.Column<int>(type: "INTEGER", nullable: true),
-                    TripDistance = table.Column<double>(type: "REAL", nullable: false),
-                    StoreAndFwdFlag = table.Column<string>(type: "TEXT", nullable: false),
-                    PULocationID = table.Column<int>(type: "INTEGER", nullable: false),
-                    DOLocationID = table.Column<int>(type: "INTEGER", nullable: false),
-                    FareAmount = table.Column<double>(type: "REAL", nullable: false),
-                    TipAmount = table.Column<double>(type: "REAL", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TpepPickupDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    TpepDropoffDatetime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PassengerCount = table.Column<int>(type: "int", nullable: true),
+                    TripDistance = table.Column<double>(type: "float", nullable: false),
+                    StoreAndFwdFlag = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PULocationID = table.Column<int>(type: "int", nullable: false),
+                    DOLocationID = table.Column<int>(type: "int", nullable: false),
+                    FareAmount = table.Column<double>(type: "float", nullable: false),
+                    TipAmount = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,10 +63,11 @@ namespace DevelopsTodayTask.Migrations
                 column: "TripDistance");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Trips_TpepPickupDatetime_TpepDropoffDatetime_PassengerCount",
+                name: "idx_unique_trip_times",
                 table: "Trips",
                 columns: new[] { "TpepPickupDatetime", "TpepDropoffDatetime", "PassengerCount" },
-                unique: true);
+                unique: true,
+                filter: "[PassengerCount] IS NOT NULL");
         }
 
         /// <inheritdoc />

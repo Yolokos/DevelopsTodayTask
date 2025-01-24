@@ -9,7 +9,7 @@ namespace DevelopsTodayTask.DbContext
 
 		protected override void OnConfiguring (DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlite("Data Source=trips.db");
+			optionsBuilder.UseSqlServer("Server=localhost;Database=trips_db;Integrated Security=True;TrustServerCertificate=True;");
 		}
 
 		protected override void OnModelCreating (ModelBuilder modelBuilder)
@@ -18,7 +18,8 @@ namespace DevelopsTodayTask.DbContext
 
 			modelBuilder.Entity<TripData>()
 				.HasIndex(t => new { t.TpepPickupDatetime, t.TpepDropoffDatetime, t.PassengerCount })
-				.IsUnique();
+				.IsUnique()
+				.HasDatabaseName("idx_unique_trip_times");
 
 			modelBuilder.Entity<TripData>()
 				.HasIndex(t => t.PULocationID)

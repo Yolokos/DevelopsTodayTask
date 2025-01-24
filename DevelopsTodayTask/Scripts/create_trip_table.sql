@@ -1,33 +1,32 @@
-CREATE TABLE Trips (
-    Id INTEGER NOT NULL CONSTRAINT "PK_Trips" PRIMARY KEY AUTOINCREMENT,
-    TpepPickupDatetime DATETIME NOT NULL,
-    TpepDropoffDatetime DATETIME NOT NULL,
-    PassengerCount INTEGER NOT NULL,
-    TripDistance REAL NOT NULL,
-    StoreAndFwdFlag TEXT NOT NULL,
-    PULocationID INTEGER NOT NULL,
-    DOLocationID INTEGER NOT NULL,
-    FareAmount REAL NOT NULL,
-    TipAmount REAL NOT NULL
+CREATE TABLE Trips
+(
+    Id INT PRIMARY KEY IDENTITY,
+    TpepPickupDatetime DATETIME,
+    TpepDropoffDatetime DATETIME,
+    PassengerCount INT,
+    PULocationID INT,
+    DOLocationID INT,
+    TripDistance DECIMAL(18, 2),
+    TipAmount DECIMAL(18, 2)
 );
 
-CREATE UNIQUE INDEX idx_unique_trip_times 
-ON TripsTest (TpepPickupDatetime, TpepDropoffDatetime);
+CREATE INDEX IX_Trips_PickupDropoffPassenger
+ON Trips (TpepPickupDatetime, TpepDropoffDatetime, PassengerCount);
 
 CREATE INDEX idx_pulocation_id
-ON TripsTest (PULocationID);
+ON Trips (PULocationID);
 
 CREATE INDEX idx_dolocation_id
-ON TripsTest (DOLocationID);
+ON Trips (DOLocationID);
 
 CREATE INDEX idx_pickup_datetime
-ON TripsTest (TpepPickupDatetime);
+ON Trips (TpepPickupDatetime);
 
 CREATE INDEX idx_dropoff_datetime
-ON TripsTest (TpepDropoffDatetime);
+ON Trips (TpepDropoffDatetime);
 
 CREATE INDEX idx_trip_distance
-ON TripsTest (TripDistance);
+ON Trips (TripDistance);
 
 CREATE INDEX idx_tip_amount
-ON TripsTest (TipAmount);
+ON Trips (TipAmount);

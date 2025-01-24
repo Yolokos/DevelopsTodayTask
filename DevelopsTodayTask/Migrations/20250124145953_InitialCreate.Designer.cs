@@ -3,6 +3,7 @@ using System;
 using DevelopsTodayTask.DbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,48 +12,54 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DevelopsTodayTask.Migrations
 {
     [DbContext(typeof(TripDbContext))]
-    [Migration("20250124130048_InitialCreate")]
+    [Migration("20250124145953_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.20");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "7.0.20")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("DevelopsTodayTask.Models.TripData", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DOLocationID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<double>("FareAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<int>("PULocationID")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<int?>("PassengerCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("int");
 
                     b.Property<string>("StoreAndFwdFlag")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<double>("TipAmount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("TpepDropoffDatetime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("TpepPickupDatetime")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("datetime2");
 
                     b.Property<double>("TripDistance")
-                        .HasColumnType("REAL");
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -75,7 +82,9 @@ namespace DevelopsTodayTask.Migrations
                         .HasDatabaseName("idx_trip_distance");
 
                     b.HasIndex("TpepPickupDatetime", "TpepDropoffDatetime", "PassengerCount")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasDatabaseName("idx_unique_trip_times")
+                        .HasFilter("[PassengerCount] IS NOT NULL");
 
                     b.ToTable("Trips", (string)null);
                 });

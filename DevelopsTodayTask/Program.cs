@@ -63,7 +63,7 @@ namespace DevelopsTodayTask
 						Console.WriteLine("100 longest fares in terms of time spent traveling:");
 						foreach (var trip in getLongestTripsByDuration)
 						{
-							Console.WriteLine($"TripId: {trip.Id}, Duration: {(trip.TpepDropoffDatetime - trip.TpepPickupDatetime).TotalMinutes} минут");
+							Console.WriteLine($"TripId: {trip.Id}, Duration: {(trip.TpepDropoffDatetime - trip.TpepPickupDatetime).TotalMinutes} minutes");
 						}
 						break;
 
