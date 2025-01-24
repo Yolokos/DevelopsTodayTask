@@ -14,7 +14,7 @@ This console application processes and analyzes trip data from a CSV file. The p
 1. Clone the repository: git clone [https://github.com/Yolokos/DevelopsTodayTask.git](https://github.com/Yolokos/DevelopsTodayTask.git)
 2. Install dependencies
 3. Configure the database:
-    The program uses SQLite as the default database, but you can configure it to use other database systems.
+    The program uses MSSQL as the default database, but you can configure it to use other database systems.
     Make sure the database schema and tables are properly set up, including necessary indexes for performance optimization.
 4. Run the application: dotnet run
 
