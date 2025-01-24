@@ -11,7 +11,7 @@ Search trips by PULocationId and date range: Allows users to search for trips wi
 
 # Setup
 
-1. Clone the repository: git clone https://github.com/your-username/trip-data-analysis.git
+1. Clone the repository: git clone [https://github.com/Yolokos/DevelopsTodayTask.git](https://github.com/Yolokos/DevelopsTodayTask.git)
 2. Install dependencies
 3. Configure the database:
     The program uses SQLite as the default database, but you can configure it to use other database systems.
