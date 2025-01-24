@@ -4,10 +4,10 @@ This console application processes and analyzes trip data from a CSV file. The p
 
 # Features
 
-Find the PULocationId with the highest average tip: Calculates and displays the location ID (PULocationId) with the highest average tip value.
-Find the 100 longest trips by distance: Retrieves and displays the 100 longest trips based on trip distance.
-Find the 100 longest trips by duration: Retrieves and displays the 100 longest trips based on time duration between pickup and dropoff.
-Search trips by PULocationId and date range: Allows users to search for trips within a specific location (PULocationId) and a defined time range (start date and end date).
+- Find the PULocationId with the highest average tip: Calculates and displays the location ID (PULocationId) with the highest average tip value.
+- Find the 100 longest trips by distance: Retrieves and displays the 100 longest trips based on trip distance.
+- Find the 100 longest trips by duration: Retrieves and displays the 100 longest trips based on time duration between pickup and dropoff.
+- Search trips by PULocationId and date range: Allows users to search for trips within a specific location (PULocationId) and a defined time range (start date and end date).
 
 # Setup
 
