@@ -2,6 +2,7 @@
 using DevelopsTodayTask.DbContext;
 using DevelopsTodayTask.Models;
 using DevelopsTodayTask.RawModels;
+using EFCore.BulkExtensions;
 using System.Globalization;
 
 namespace DevelopsTodayTask.Common
@@ -48,8 +49,7 @@ namespace DevelopsTodayTask.Common
 					}
 				}
 
-				await context.TripData.AddRangeAsync(tripsData);
-				await context.SaveChangesAsync();
+				await context.BulkInsertAsync(tripsData);
 			}
 		}
 	}
