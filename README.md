@@ -16,7 +16,8 @@ This console application processes and analyzes trip data from a CSV file. The p
 3. Configure the database:
     The program uses MSSQL as the default database, but you can configure it to use other database systems.
     Make sure the database schema and tables are properly set up, including necessary indexes for performance optimization.
-4. Run the application: dotnet run
+    Type Update-Database in the Package Manager Console to apply migration.
+5. Run the application: dotnet run
 
 # Deliverables
 
