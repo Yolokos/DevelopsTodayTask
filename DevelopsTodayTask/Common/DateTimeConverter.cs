@@ -6,6 +6,8 @@
 		{
 			var estTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
 
+			estDateTime = DateTime.SpecifyKind(estDateTime, DateTimeKind.Unspecified);
+
 			DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(estDateTime, estTimeZone);
 
 			return utcDateTime;

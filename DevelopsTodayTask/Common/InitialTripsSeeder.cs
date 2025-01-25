@@ -21,8 +21,8 @@ namespace DevelopsTodayTask.Common
 				{
 					TripData tripData = new()
 					{
-						TpepPickupDatetime = tripRaw.TpepPickupDatetime,
-						TpepDropoffDatetime = tripRaw.TpepDropoffDatetime,
+						TpepPickupDatetime = DateTimeConverter.ConvertEstToUtc(tripRaw.TpepPickupDatetime),
+						TpepDropoffDatetime = DateTimeConverter.ConvertEstToUtc(tripRaw.TpepDropoffDatetime),
 						PassengerCount = tripRaw.PassengerCount,
 						TripDistance = tripRaw.TripDistance,
 						StoreAndFwdFlag = tripRaw.StoreAndFwdFlag.Trim().Contains("Y") ? "Yes" : "No",
@@ -46,12 +46,6 @@ namespace DevelopsTodayTask.Common
 						csv.WriteRecord(tripRaw);
 						await csv.NextRecordAsync();
 					}
-				}
-
-				foreach (var tripData in tripsData)
-				{
-					tripData.TpepPickupDatetime = DateTimeConverter.ConvertEstToUtc(tripData.TpepPickupDatetime);
-					tripData.TpepDropoffDatetime = DateTimeConverter.ConvertEstToUtc(tripData.TpepDropoffDatetime);
 				}
 
 				await context.TripData.AddRangeAsync(tripsData);
