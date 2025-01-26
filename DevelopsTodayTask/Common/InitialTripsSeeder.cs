@@ -3,6 +3,7 @@ using DevelopsTodayTask.DbContext;
 using DevelopsTodayTask.Models;
 using DevelopsTodayTask.RawModels;
 using EFCore.BulkExtensions;
+using System.Collections.Concurrent;
 using System.Globalization;
 
 namespace DevelopsTodayTask.Common
@@ -11,46 +12,48 @@ namespace DevelopsTodayTask.Common
 	{
 		public static async Task ProcessTripsAndSaveDuplicatesAsync (IAsyncEnumerable<TripDataRaw> tripDataStream, string duplicatesFilePath)
 		{
-			using (var context = new TripDbContext())
-			using (var writer = new StreamWriter(duplicatesFilePath))
-			using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+
+			var tripsData = new List<TripData>();
+			var duplicateRecords = new ConcurrentBag<TripDataRaw>();
+			var processedTrips = new ConcurrentDictionary<string, TripData>();
+			await Parallel.ForEachAsync(tripDataStream, new ParallelOptions { MaxDegreeOfParallelism = 4 }, async (tripRaw, token) =>
 			{
-				csv.WriteHeader<TripData>();
-				await csv.NextRecordAsync();
-				var tripsData = new List<TripData>();
-				await foreach (var tripRaw in tripDataStream)
+				var tripKey = $"{tripRaw.TpepPickupDatetime}_{tripRaw.TpepDropoffDatetime}_{tripRaw.PassengerCount}";
+
+				TripData tripData = new()
 				{
-					TripData tripData = new()
-					{
-						TpepPickupDatetime = DateTimeConverter.ConvertEstToUtc(tripRaw.TpepPickupDatetime),
-						TpepDropoffDatetime = DateTimeConverter.ConvertEstToUtc(tripRaw.TpepDropoffDatetime),
-						PassengerCount = tripRaw.PassengerCount,
-						TripDistance = tripRaw.TripDistance,
-						StoreAndFwdFlag = tripRaw.StoreAndFwdFlag.Trim().Contains("Y") ? "Yes" : "No",
-						PULocationID = tripRaw.PULocationID,
-						DOLocationID = tripRaw.DOLocationID,
-						FareAmount = tripRaw.FareAmount,
-						TipAmount = tripRaw.TipAmount
-					};
+					TpepPickupDatetime = DateTimeConverter.ConvertEstToUtc(tripRaw.TpepPickupDatetime),
+					TpepDropoffDatetime = DateTimeConverter.ConvertEstToUtc(tripRaw.TpepDropoffDatetime),
+					PassengerCount = tripRaw.PassengerCount,
+					TripDistance = tripRaw.TripDistance,
+					StoreAndFwdFlag = tripRaw.StoreAndFwdFlag.Trim().Contains("Y") ? "Yes" : "No",
+					PULocationID = tripRaw.PULocationID,
+					DOLocationID = tripRaw.DOLocationID,
+					FareAmount = tripRaw.FareAmount,
+					TipAmount = tripRaw.TipAmount
+				};
 
-					var existingRecord = tripsData
-						.FirstOrDefault(t => t.TpepPickupDatetime == tripData.TpepPickupDatetime
-						                     && t.TpepDropoffDatetime == tripData.TpepDropoffDatetime
-						                     && t.PassengerCount == tripData.PassengerCount);
-
-					if (existingRecord == null)
-					{
-						tripsData.Add(tripData);
-					}
-					else
-					{
-						csv.WriteRecord(tripRaw);
-						await csv.NextRecordAsync();
-					}
+				if (!processedTrips.TryAdd(tripKey, tripData))
+				{
+					duplicateRecords.Add(tripRaw);
 				}
 
-				await context.BulkInsertAsync(tripsData);
+				await Task.CompletedTask; 
+			});
+
+			using var context = new TripDbContext();
+			using var writer = new StreamWriter(duplicatesFilePath);
+			using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
+			csv.WriteHeader<TripDataRaw>();
+			await csv.NextRecordAsync();
+
+			foreach (var duplicate in duplicateRecords)
+			{
+				csv.WriteRecord(duplicate);
+				await csv.NextRecordAsync();
 			}
+
+			await context.BulkInsertAsync(tripsData);
 		}
 	}
 }
