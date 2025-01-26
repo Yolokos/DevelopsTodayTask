@@ -53,7 +53,7 @@ namespace DevelopsTodayTask.Common
 				await csv.NextRecordAsync();
 			}
 
-			await context.BulkInsertAsync(tripsData);
+			await context.BulkInsertAsync(processedTrips.Values.ToList());
 		}
 	}
 }
